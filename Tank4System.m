@@ -41,4 +41,12 @@ u = [F1; F2];
 %% --------------------------------------------------------------
 % Solve the system of differential equations
 [T,X] = ode15s(@FourTankSystem,[t0 tf],x0,[],u,p);
-% --------------------------------------------------------------
+
+
+%% --------------------------------------------------------------
+% Finding stedy state of the system
+%% --------------------------------------------------------------
+xs0 = 5000*ones(4,1); % Initial guess of steady state
+u_stadyStateEQ = [300; 300]; % Steady-state inputs
+x_stadyStateEQ = fsolve(@FourTankSystemNoTime,xs0,[],u_stadyStateEQ,p);
+
