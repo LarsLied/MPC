@@ -1,4 +1,4 @@
-function [xdot] = FourTankSystem(t,x,u,p)
+function [xdot] = FourTankSystem(t,x,u,d,p)
 % FOURTANKSYSTEM Model dx/dt = f(t,x,u,p) for 4-tank System
 %
 % This function implements a differential equation model for the
@@ -14,8 +14,8 @@ A = p(5:8,1);               % Tank cross sectional areas [cm2]
 gamma = p(9:10,1);          % Valve positions [-]
 g = p(11,1);                % Acceleration of gravity [cm/s2]
 rho = p(12,1);              % Density of water [g/cm3]
-F3 = p(13,1);               % uncontrolled flow to tank 3 
-F4 = p(14,1);               % uncontrolled flow to tank 4
+F3 = d(1,1);
+F4 = d(2,1);
 % Inflows
 qin = zeros(4,1);
 qin(1,1) = gamma(1)*F(1);       % Inflow from valve 1 to tank 1 [cm3/s]

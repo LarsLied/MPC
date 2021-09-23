@@ -20,7 +20,7 @@ rho = 1.00;         %[g/cm3] Density of water
 F3 = 10;            % [cm3/s] uncontroled flow in to tank 3
 F4 = 15;            % [cm3/s] uncontroled flow in to tank 4
 
-p = [a1; a2; a3; a4; A1; A2; A3; A4; gamma1; gamma2; g; rho;F3;F4];
+p = [a1; a2; a3; a4; A1; A2; A3; A4; gamma1; gamma2; g; rho];
 
 %% --------------------------------------------------------------
 % Simulation scenario
@@ -36,13 +36,13 @@ F2 = 300;           % [cm3/s] Flow rate from pump 2
 
 x0 = [m10; m20; m30; m40];
 u = [F1; F2];
-
+d = [F3; F4];
 
 %% --------------------------------------------------------------
 % Compute the solution / Simulate
 %% --------------------------------------------------------------
 % Solve the system of differential equations
-[T,X] = ode15s(@FourTankSystem,[t0 tf],x0,[],u,p);
+[T,X] = ode15s(@FourTankSystem,[t0 tf],x0,[],u,d,p);
 
 %% --------------------------------------------------------------
 % plot the system
@@ -82,5 +82,46 @@ hold off
 %% --------------------------------------------------------------
 xs0 = 5000*ones(4,1); % Initial guess of steady state
 u_stadyStateEQ = [300; 300]; % Steady-state inputs
-x_stadyStateEQ = fsolve(@FourTankSystemNoTime,xs0,[],u_stadyStateEQ,p);
+d_stadyStateEQ = [40;80];
+x_stadyStateEQ = fsolve(@FourTankSystemNoTime,xs0,[],u_stadyStateEQ,d_stadyStateEQ,p);
 
+
+
+%% -------------------------------------
+% ploting height
+%% --------------------------------------
+y = zeros(size(X));
+for i = 1 : size(X,1)
+    y(i,:) = measurementFunctionFourTank(X(i),p);
+end
+
+
+figure()
+subplot(4,1,1)
+hold on
+plot(T,y(:,1))
+ylabel ('height tank 1[cm]');
+grid on
+hold off
+
+subplot(4,1,2)
+hold on
+plot(T,y(:,2))
+ylabel ('height tank 2[cm]');
+grid on
+hold off
+
+subplot(4,1,3)
+hold on
+plot(T,y(:,3))
+ylabel ('height tank 3[cm]');
+grid on
+hold off
+
+subplot(4,1,4)
+hold on
+plot(T,y(:,4))
+ylabel ('height tank 4[cm]');
+xlabel ('time');
+grid on
+hold off
